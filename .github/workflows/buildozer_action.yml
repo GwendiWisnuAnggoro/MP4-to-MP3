@@ -99,7 +99,9 @@ jobs:
       - name: Install pip dependencies
         run: |
           pip install --upgrade pip
-          pip install buildozer cython==0.29.33
+          pip install buildozer cython==0.29.33 kivy moviepy pillow plyer
+          pip install --upgrade setuptools
+
 
       # Build with Buildozer
       - name: Build with Buildozer

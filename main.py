@@ -7,7 +7,6 @@ from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock, mainthread
-from kivy.uix.popup import Popup
 import threading
 import time
 import os
@@ -115,15 +114,19 @@ class ConverterApp(App):
 
     def add_files(self, selection):
         if selection:
-            for video_path in selection:
-                default_output_name, _ = os.path.splitext(os.path.basename(video_path))
-                file_widget = FileWidget(video_path, default_output_name, self.delete_file, self.edit_file)
-                self.file_widgets.append(file_widget)
-                self.file_list.add_widget(file_widget)
+            # Add files one by one with a delay to improve UI performance
+            for i, video_path in enumerate(selection):
+                Clock.schedule_once(lambda dt, path=video_path: self.add_file(path), i * 0.1)
 
             # Enable convert button if there are files in the list and no conversion is in progress
             if not self.is_conversion_in_progress:
                 self.convert_button.disabled = False
+
+    def add_file(self, video_path):
+        default_output_name, _ = os.path.splitext(os.path.basename(video_path))
+        file_widget = FileWidget(video_path, default_output_name, self.delete_file, self.edit_file)
+        self.file_widgets.append(file_widget)
+        self.file_list.add_widget(file_widget)
 
     def delete_file(self, file_widget):
         self.file_widgets.remove(file_widget)
@@ -211,27 +214,18 @@ class ConverterApp(App):
         while True:
             file_widget, progress = self.queue.get()
             if progress == 100:
-                self.remove_completed_file(file_widget)  # Completed file
+                file_widget.update_progress(progress)
             else:
                 file_widget.update_progress(progress)
-
-    def retry_conversion(self):
-        self.cancel_event.clear()
-        threading.Thread(target=self.convert_videos, daemon=True).start()
-
-    def finish_conversion(self, instance=None):
-        # Disable cancel button and enable the convert button when done
-        self.cancel_button.disabled = True
-
-        # Keep the file widgets for resuming, just update their state
-        self.convert_button.disabled = False
-        self.is_conversion_in_progress = False
-        self.current_conversion_index = len(self.file_widgets)  # Mark all as processed
 
     def remove_completed_file(self, file_widget):
         self.file_widgets.remove(file_widget)
         self.file_list.remove_widget(file_widget)
-        file_widget.progress_bar.value = 100  # Ensure progress bar shows 100%
+
+    def finish_conversion(self, instance):
+        self.is_conversion_in_progress = False
+        self.convert_button.disabled = False
+        self.cancel_button.disabled = True
 
 
 if __name__ == "__main__":
