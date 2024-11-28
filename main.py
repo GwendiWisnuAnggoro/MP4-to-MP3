@@ -10,7 +10,7 @@ from kivy.clock import Clock, mainthread
 import threading
 import time
 import os
-from moviepy import VideoFileClip
+from moviepy.editor import VideoFileClip
 from queue import Queue
 
 
