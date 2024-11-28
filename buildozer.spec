@@ -7,7 +7,7 @@ title = Convert MP4 to MP3
 package.name = ConverterVideo
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.convertermp3tomp4.app
+package.domain = org.convertermp3tomp4
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -98,7 +98,10 @@ fullscreen = 1
 #android.permissions = android.permission.INTERNET, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
 android.permissions = android.permission.READ_EXTERNAL_STORAGE, android.permission.WRITE_EXTERNAL_STORAGE, android.permission.MANAGE_EXTERNAL_STORAGE
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d226267267f4d0ff0194ddb4637520376707ebc1
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
