@@ -7,7 +7,7 @@ title = Convert MP4 to MP3
 package.name = ConverterVideo
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.convertermp3tomp4
+package.domain = com.convertmp4tomp4.app
 
 # (str) Source code where the main.py live
 source.dir = .
